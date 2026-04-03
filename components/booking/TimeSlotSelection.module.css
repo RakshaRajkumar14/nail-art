@@ -1,0 +1,248 @@
+/**
+ * TimeSlotSelection.module.css
+ * Styles for time slot selection
+ */
+
+.container {
+  width: 100%;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.header h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  color: #2d3748;
+}
+
+.header p {
+  margin: 0;
+  color: #718096;
+  font-size: 0.95rem;
+}
+
+.infoCard {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  border: 1px solid rgba(102, 126, 234, 0.1);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.infoItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.infoItem .label {
+  font-size: 0.9rem;
+  color: #718096;
+  font-weight: 600;
+}
+
+.infoItem .value {
+  font-size: 1.1rem;
+  color: #2d3748;
+  font-weight: 600;
+}
+
+.slotsContainer {
+  margin-bottom: 2rem;
+}
+
+.error {
+  background: #fff5f5;
+  border: 1px solid #fed7d7;
+  color: #c53030;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.slotGroup {
+  margin-bottom: 2rem;
+}
+
+.groupLabel {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2d3748;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.slotsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.75rem;
+}
+
+.slotButton {
+  padding: 0.875rem;
+  border: 2px solid #e2e8f0;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  position: relative;
+  text-align: center;
+  min-height: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.slotButton.available {
+  border-color: #cbd5e0;
+  color: #2d3748;
+}
+
+.slotButton.available:hover {
+  border-color: #667eea;
+  background: #f0f4ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.slotButton.unavailable {
+  border-color: #e2e8f0;
+  color: #cbd5e0;
+  cursor: not-allowed;
+  background: #f7fafc;
+}
+
+.slotButton.selected {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.slotTime {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.bookedBadge {
+  font-size: 0.65rem;
+  margin-top: 0.25rem;
+  opacity: 0.7;
+}
+
+.noSlots {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: #f7fafc;
+  border: 2px dashed #cbd5e0;
+  border-radius: 8px;
+}
+
+.noSlots p {
+  margin: 0.5rem 0;
+  color: #718096;
+  font-size: 1rem;
+}
+
+.selectedInfo {
+  text-align: center;
+  padding: 1rem;
+  background: #f0f4ff;
+  border-radius: 8px;
+  border: 1px solid #cbd5e0;
+  margin-bottom: 2rem;
+}
+
+.selectedInfo p {
+  margin: 0;
+  color: #2d3748;
+  font-size: 0.95rem;
+}
+
+.selectedInfo strong {
+  color: #667eea;
+  font-weight: 600;
+}
+
+.footer {
+  display: flex;
+  gap: 1rem;
+}
+
+.button {
+  flex: 1;
+  padding: 0.875rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.buttonPrimary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.buttonPrimary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.buttonPrimary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .slotsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .slotButton {
+    min-height: 50px;
+    padding: 0.75rem 0.5rem;
+  }
+
+  .button {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .slotsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  }
+
+  .slotButton {
+    min-height: 45px;
+    font-size: 0.85rem;
+  }
+
+  .slotTime {
+    font-size: 0.9rem;
+  }
+}

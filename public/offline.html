@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Offline - Nail Art Booking</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+          'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .offline-container {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        padding: 40px;
+        max-width: 500px;
+        text-align: center;
+      }
+
+      .offline-icon {
+        font-size: 80px;
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 28px;
+      }
+
+      p {
+        color: #666;
+        margin-bottom: 30px;
+        line-height: 1.6;
+      }
+
+      .offline-tips {
+        background: #f5f5f5;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        text-align: left;
+      }
+
+      .offline-tips h2 {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 15px;
+      }
+
+      .offline-tips ul {
+        list-style: none;
+      }
+
+      .offline-tips li {
+        color: #666;
+        padding: 8px 0;
+        font-size: 14px;
+      }
+
+      .offline-tips li:before {
+        content: '✓ ';
+        color: #667eea;
+        font-weight: bold;
+        margin-right: 8px;
+      }
+
+      button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s;
+        margin: 10px 5px;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      .button-group {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .secondary-btn {
+        background: #f0f0f0;
+        color: #333;
+      }
+
+      @media (max-width: 600px) {
+        .offline-container {
+          padding: 30px 20px;
+        }
+
+        h1 {
+          font-size: 24px;
+        }
+
+        .offline-icon {
+          font-size: 60px;
+        }
+
+        .button-group {
+          flex-direction: column;
+        }
+
+        button {
+          width: 100%;
+        }
+      }
+
+      .connection-status {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+        font-size: 14px;
+        color: #999;
+      }
+
+      .status-dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #ccc;
+        margin-right: 8px;
+      }
+
+      .status-dot.online {
+        background: #4caf50;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="offline-container">
+      <div class="offline-icon">📵</div>
+      <h1>You're Offline</h1>
+      <p>
+        It looks like you've lost your internet connection. Some features may not be available
+        right now.
+      </p>
+
+      <div class="offline-tips">
+        <h2>What You Can Still Do:</h2>
+        <ul>
+          <li>View cached pages you've visited before</li>
+          <li>Check your booking history</li>
+          <li>Browse our service gallery</li>
+        </ul>
+      </div>
+
+      <div class="button-group">
+        <button onclick="location.reload()">Try Again</button>
+        <button class="secondary-btn" onclick="goHome()">Go Home</button>
+      </div>
+
+      <div class="connection-status">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">Waiting for connection...</span>
+      </div>
+    </div>
+
+    <script>
+      // Check connection status
+      function updateConnectionStatus() {
+        const dot = document.getElementById('statusDot');
+        const text = document.getElementById('statusText');
+
+        if (navigator.onLine) {
+          dot.classList.add('online');
+          text.textContent = 'Connected!';
+          // Optionally redirect after reconnection
+          setTimeout(() => {
+            location.reload();
+          }, 1000);
+        } else {
+          dot.classList.remove('online');
+          text.textContent = 'Offline - Please check your internet connection';
+        }
+      }
+
+      function goHome() {
+        location.href = '/';
+      }
+
+      // Listen for connection changes
+      window.addEventListener('online', updateConnectionStatus);
+      window.addEventListener('offline', updateConnectionStatus);
+
+      // Initial check
+      updateConnectionStatus();
+    </script>
+  </body>
+</html>
