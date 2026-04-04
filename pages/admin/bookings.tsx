@@ -18,26 +18,30 @@ export default function BookingsPage() {
 
   return (
     <AuthGuard onTokenReceived={setAdminToken}>
-      <div className="flex h-screen bg-gray-50">
-        {/* Sidebar */}
+      <div className="flex min-h-screen bg-[#fcf7f2]">
         <AdminSidebar onLogout={handleLogout} />
 
-        {/* Main Content */}
-        <div className="flex-1 ml-64 overflow-auto">
+        <div className="ml-72 flex-1 overflow-auto">
           <div className="p-8">
-            {/* Header */}
             <div className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-900">Bookings Management</h1>
-              <p className="text-gray-600 mt-2">View and manage all customer bookings</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#c48379]">
+                Operations
+              </p>
+              <h1
+                className="mt-3 text-4xl font-medium text-[#2e211c]"
+                style={{ fontFamily: 'var(--shivya-serif)' }}
+              >
+                Bookings Management
+              </h1>
+              <p className="mt-2 text-[#897168]">View and manage all customer bookings.</p>
             </div>
 
-            {/* Bookings View Component */}
             {adminToken ? (
               <BookingsView adminToken={adminToken} />
             ) : (
               <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                <p className="text-gray-600">Loading...</p>
+                <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-[#c48379]"></div>
+                <p className="text-[#897168]">Loading...</p>
               </div>
             )}
           </div>

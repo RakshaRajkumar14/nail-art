@@ -1,0 +1,22 @@
+.glitterParticle {
+  position: fixed;
+  pointer-events: none;
+  border-radius: 50%;
+  z-index: 9999;
+  animation: glitterFade 1s ease-out forwards;
+  box-shadow: 0 0 6px currentColor;
+}
+
+@keyframes glitterFade {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(
+      calc((random() - 0.5) * 30px),
+      calc((random() - 0.5) * 30px)
+    ) scale(0);
+  }
+}

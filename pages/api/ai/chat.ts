@@ -102,7 +102,7 @@ async function generateAIResponse({
       actions: [
         {
           type: 'navigate',
-          target: '/booking',
+          target: '/services',
           label: 'Start Booking',
         },
       ],
@@ -118,7 +118,7 @@ async function generateAIResponse({
   ) {
     return {
       reply:
-        'Great question! Our services range from $25 to $150, depending on the service and complexity. Here are our main price ranges:\n\n• Basic Manicure: $25-35\n• Gel Manicure: $45-60\n• Extensions: $60-80\n• Nail Art: $50-100+',
+        'Great question! Our services range from €30 to €120, depending on the service and complexity. Here are our main price ranges:\n\n• Clean Manicure: €30\n• Natural Manicure: €45\n• Gel Full Set: €85\n• Acrylic Full Set: €75\n• Custom details and enhancements: from €15',
       suggestions: ['View full pricing', 'Book now', 'Special offers'],
       actions: [],
     };
@@ -138,7 +138,7 @@ async function generateAIResponse({
       actions: [
         {
           type: 'navigate',
-          target: '/booking',
+          target: '/book',
           label: 'Check Availability',
         },
       ],
@@ -154,12 +154,12 @@ async function generateAIResponse({
   ) {
     return {
       reply:
-        "📍 You can find us at:\n\nElegance Nails\n123 Elegance Street\nBeautiful City, BC 12345\n\nWe're easy to find with plenty of parking available!",
+        "📍 You can find us at:\n\nShivya's Nal Studio\n124 Atelier Row\nSuite 400\nNew York, NY\n\nWe're easy to find and the studio is prepared for calm, private appointments.",
       suggestions: ['Get directions', 'Call us', 'Visit website'],
       actions: [
         {
           type: 'link',
-          href: 'https://maps.google.com/?q=Elegance+Nails',
+          href: 'https://maps.google.com/?q=Shivya%27s+Nal+Studio',
           label: 'Get Directions',
         },
       ],
@@ -230,7 +230,7 @@ async function generateAIResponse({
   // Default response
   return {
     reply:
-      "Hello! 👋 Welcome to Elegance Nails! I'm here to help. You can ask me about:\n\n• 📅 Booking an appointment\n• 💳 Pricing and services\n• 🕐 Our hours\n• 📍 Our location\n• 🎨 Our nail designs\n\nWhat can I help you with?",
+      "Hello! 👋 Welcome to Shivya's Nal Studio! I'm here to help. You can ask me about:\n\n• 📅 Booking an appointment\n• 💳 Pricing and services\n• 🕐 Our hours\n• 📍 Our location\n• 🎨 Our nail designs\n\nWhat can I help you with?",
     suggestions: [
       'Book appointment',
       'View services',
@@ -240,7 +240,7 @@ async function generateAIResponse({
     actions: [
       {
         type: 'navigate',
-        target: '/booking',
+        target: '/services',
         label: 'Start Booking',
       },
     ],

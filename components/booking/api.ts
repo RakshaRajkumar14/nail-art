@@ -29,8 +29,8 @@ class ApiClient {
       });
 
       if (!response.ok) {
-        const error: ApiError = await response.json();
-        throw new Error(error.message || `API Error: ${response.status}`);
+        const error: ApiError & { error?: string } = await response.json();
+        throw new Error(error.message || error.error || `API Error: ${response.status}`);
       }
 
       return await response.json();
@@ -69,7 +69,13 @@ class ApiClient {
    * Get available slots for a date
    */
   async getAvailableSlots(date: string): Promise<string[]> {
-    return this.request<string[]>(`/bookings/available-slots?date=${date}`);
+    const response = await this.request<{
+      success: boolean;
+      data?: Array<{ time: string; available: boolean }>;
+    }>(`/available-times?date=${date}`);
+
+    const slots = response.data || [];
+    return slots.filter((slot) => !slot.available).map((slot) => slot.time);
   }
 
   /**

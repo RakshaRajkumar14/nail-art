@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '@/lib/supabase';
 import { isAdminToken } from '@/lib/auth';
+import { mapServiceRow, ServiceRow } from '@/lib/supabaseMappers';
 
 interface ApiResponse {
   success: boolean;
@@ -40,7 +41,7 @@ export default async function handler(
 
       return res.status(200).json({
         success: true,
-        data,
+        data: mapServiceRow(data as ServiceRow),
       });
     }
 
@@ -60,12 +61,12 @@ export default async function handler(
         .from('services')
         .update({
           title,
-          description,
+          description: description || '',
           price,
           duration,
           category,
-          imageUrl,
-          updatedAt: new Date().toISOString(),
+          image_url: imageUrl,
+          updated_at: new Date().toISOString(),
         })
         .eq('id', id)
         .select()
@@ -81,7 +82,7 @@ export default async function handler(
 
       return res.status(200).json({
         success: true,
-        data,
+        data: mapServiceRow(data as ServiceRow),
       });
     }
 

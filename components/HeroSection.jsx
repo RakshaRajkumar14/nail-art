@@ -34,15 +34,15 @@ export default function HeroSection() {
         {/* Headline */}
         <h1
           className="text-6xl md:text-7xl font-bold mb-6 leading-tight"
-          style={{ color: '#1E1E1E', fontFamily: 'Playfair Display' }}
+          style={{ color: '#1E1E1E', fontFamily: 'Cormorant Garamond, Georgia, serif', fontWeight: 700 }}
         >
-          Elegant Nails Designed For You
+          Shivya's Nail Studio
         </h1>
 
         {/* Subtitle */}
         <p
           className="text-xl md:text-2xl mb-8 font-light"
-          style={{ color: '#777777', fontFamily: 'Inter' }}
+          style={{ color: '#444444', fontFamily: 'Cormorant Garamond, Georgia, serif', fontWeight: 600 }}
         >
           Experience luxury nail artistry with our award-winning artists. Your perfect manicure awaits.
         </p>
@@ -52,7 +52,7 @@ export default function HeroSection() {
           <Link
             href="/book"
             className="px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 hover:shadow-lg transform hover:scale-105 flex items-center justify-center gap-2 inline-block"
-            style={{ backgroundColor: '#E6B7A9', color: '#FAF7F4', fontFamily: 'Inter' }}
+            style={{ backgroundColor: '#E6B7A9', color: '#FAF7F4', fontFamily: 'Cormorant Garamond, Georgia, serif', fontWeight: 700 }}
           >
             Book Appointment
             <ChevronRight size={20} />
@@ -65,7 +65,8 @@ export default function HeroSection() {
               backgroundColor: 'transparent',
               color: '#E6B7A9',
               borderColor: '#E6B7A9',
-              fontFamily: 'Inter',
+              fontFamily: 'Cormorant Garamond, Georgia, serif',
+              fontWeight: 700,
             }}
           >
             View Services

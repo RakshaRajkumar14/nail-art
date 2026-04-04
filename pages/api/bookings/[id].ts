@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '@/lib/supabase';
 import { isAdminToken } from '@/lib/auth';
+import { BookingRow, mapBookingRow } from '@/lib/supabaseMappers';
 
 interface ApiResponse {
   success: boolean;
@@ -48,7 +49,7 @@ export default async function handler(
 
       return res.status(200).json({
         success: true,
-        data,
+        data: mapBookingRow(data as BookingRow),
       });
     }
 
@@ -65,13 +66,13 @@ export default async function handler(
       const { status, customerName, customerEmail, customerPhone, notes } = req.body;
 
       const updateData: any = {
-        updatedAt: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
 
       if (status) updateData.status = status;
-      if (customerName) updateData.customerName = customerName;
-      if (customerEmail) updateData.customerEmail = customerEmail;
-      if (customerPhone) updateData.customerPhone = customerPhone;
+      if (customerName) updateData.customer_name = customerName;
+      if (customerEmail) updateData.email = customerEmail;
+      if (customerPhone) updateData.phone = customerPhone;
       if (notes !== undefined) updateData.notes = notes;
 
       const { data, error } = await supabase
@@ -91,7 +92,7 @@ export default async function handler(
 
       return res.status(200).json({
         success: true,
-        data,
+        data: mapBookingRow(data as BookingRow),
       });
     }
 
