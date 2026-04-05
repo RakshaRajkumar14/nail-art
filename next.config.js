@@ -24,19 +24,11 @@ const nextConfig = {
   // React Strict Mode for Development
   reactStrictMode: true,
 
-  // SWC Minification for better performance
-  swcMinify: true,
-
   // Compiler Options
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
-    styledComponents: true,
   },
 
-  // Optimization: Code Splitting (use Next.js defaults)
-  webpack: (config, { isServer }) => {
-    return config;
-  },
 
   // Environment Variables
   env: {
