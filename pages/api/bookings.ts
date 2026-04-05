@@ -189,31 +189,51 @@ export default async function handler(
 
       const savedBooking = mapBookingRow(data as BookingRow);
 
-      // Trigger Confirmation Email asynchronously so it won't block the UI
+      // Trigger Confirmation Email directly via Resend (avoid self-fetch on Vercel)
       try {
-        const protocol = process.env.NODE_ENV === 'production' ? 'https://' : 'http://';
-        const host = req.headers.host || 'localhost:3000';
-        const baseUrl = `${protocol}${host}`;
+        const resendApiKey = process.env.RESEND_API_KEY;
+        if (resendApiKey) {
+          const serviceList = selectedServices
+            .map((s: any) => s.title || s.bookingName || s.name || 'Service')
+            .join(', ');
 
-        await fetch(`${baseUrl}/api/send-email`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            to: customerEmail,
-            subject: "Booking Confirmed - Shivya's Nail Studio",
-            templateType: 'booking-confirmation',
-            data: {
-              customerName,
-              bookingRef: savedBooking.id.substring(0, 8).toUpperCase(),
-              date,
-              time: timeSlot,
-              services: selectedServices.map((s: any) => s.title || s.bookingName || s.name || 'Service'),
-              totalPrice
-            }
-          })
-        });
+          const emailHtml = `
+            <div style="font-family:Georgia,serif;max-width:600px;margin:0 auto;background:#fff8f5;padding:40px 24px">
+              <h1 style="color:#c5856a;font-size:1.8rem;text-align:center;margin-bottom:8px">Shivya's Nail Studio</h1>
+              <p style="text-align:center;color:#888;margin-bottom:32px">Appointment Confirmation</p>
+              <div style="background:#fff;border-radius:12px;padding:28px;border:1px solid #f0e0d8">
+                <p style="font-size:1.1rem;color:#1a1a1a">Hi ${customerName},</p>
+                <p style="color:#444">Your appointment has been confirmed! Here are your details:</p>
+                <table style="width:100%;margin:20px 0;border-collapse:collapse">
+                  <tr><td style="padding:8px 0;color:#888;width:40%">Booking Ref</td><td style="color:#1a1a1a;font-weight:600">#${savedBooking.id.substring(0,8).toUpperCase()}</td></tr>
+                  <tr><td style="padding:8px 0;color:#888">Date</td><td style="color:#1a1a1a">${date}</td></tr>
+                  <tr><td style="padding:8px 0;color:#888">Time</td><td style="color:#1a1a1a">${timeSlot}</td></tr>
+                  <tr><td style="padding:8px 0;color:#888">Services</td><td style="color:#1a1a1a">${serviceList}</td></tr>
+                  <tr><td style="padding:8px 0;color:#888">Total</td><td style="color:#c5856a;font-weight:700">€${totalPrice}</td></tr>
+                </table>
+              </div>
+              <p style="text-align:center;color:#888;font-size:0.85rem;margin-top:32px">© 2026 Shivya's Nail Studio · hello@shivyasnailstudio.com</p>
+            </div>
+          `;
+
+          await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${resendApiKey}`,
+            },
+            body: JSON.stringify({
+              from: process.env.NEXT_PUBLIC_EMAIL_FROM || 'onboarding@resend.dev',
+              to: customerEmail,
+              subject: "Booking Confirmed - Shivya's Nail Studio",
+              html: emailHtml,
+            }),
+          });
+        } else {
+          console.warn('[EMAIL] RESEND_API_KEY missing — email not sent');
+        }
       } catch (err) {
-        console.error("Failed to execute email request:", err);
+        console.error('Failed to send confirmation email:', err);
       }
 
       return res.status(201).json({
