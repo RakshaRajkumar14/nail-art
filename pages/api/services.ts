@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '@/lib/supabase';
 import { isAdminToken } from '@/lib/auth';
+import { mapServiceRow, ServiceRow } from '@/lib/supabaseMappers';
 
 interface Service {
   id?: string;
@@ -30,13 +31,13 @@ export default async function handler(
       const { data, error } = await supabase
         .from('services')
         .select('*')
-        .order('createdAt', { ascending: false });
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
 
       return res.status(200).json({
         success: true,
-        data: data || [],
+        data: ((data || []) as ServiceRow[]).map(mapServiceRow),
       });
     }
 
@@ -52,31 +53,31 @@ export default async function handler(
 
       const { title, description, price, duration, category, imageUrl }: Service = req.body;
 
-      if (!title || !price || !duration) {
+      if (!title || !price || !duration || !category) {
         return res.status(400).json({
           success: false,
-          error: 'Missing required fields: title, price, duration',
+          error: 'Missing required fields: title, price, duration, category',
         });
       }
 
       const { data, error } = await supabase.from('services').insert([
         {
           title,
-          description,
+          description: description || '',
           price,
           duration,
           category,
-          imageUrl,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          image_url: imageUrl,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         },
-      ]);
+      ]).select().single();
 
       if (error) throw error;
 
       return res.status(201).json({
         success: true,
-        data: data?.[0] || { title, description, price, duration },
+        data: data ? mapServiceRow(data as ServiceRow) : { title, description, price, duration },
       });
     }
 

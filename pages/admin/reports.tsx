@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AuthGuard from '@/components/admin/AuthGuard';
-import { formatDate, formatCurrency } from '@/utils/admin-helpers';
+import { formatCurrency } from '@/utils/admin-helpers';
 
 export default function ReportsPage() {
   const router = useRouter();
@@ -12,13 +12,7 @@ export default function ReportsPage() {
   const [loading, setLoading] = useState(false);
   const [reportType, setReportType] = useState('revenue');
 
-  React.useEffect(() => {
-    if (adminToken) {
-      fetchBookingsForReport();
-    }
-  }, [adminToken, reportType]);
-
-  const fetchBookingsForReport = async () => {
+  const fetchBookingsForReport = useCallback(async () => {
     try {
       setLoading(true);
       const res = await fetch('/api/bookings', {
@@ -38,12 +32,18 @@ export default function ReportsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [adminToken]);
+
+  React.useEffect(() => {
+    if (adminToken) {
+      fetchBookingsForReport();
+    }
+  }, [adminToken, reportType, fetchBookingsForReport]);
 
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
     setAdminToken('');
-    router.push('/admin');
+    router.push('/');
     toast.success('Logged out successfully!');
   };
 
@@ -77,116 +77,117 @@ export default function ReportsPage() {
 
   return (
     <AuthGuard onTokenReceived={setAdminToken}>
-      <div className="flex h-screen bg-gray-50">
-        {/* Sidebar */}
+      <div className="flex min-h-screen bg-transparent relative z-10">
         <AdminSidebar onLogout={handleLogout} />
 
-        {/* Main Content */}
-        <div className="flex-1 ml-64 overflow-auto">
+        <div className="ml-72 flex-1 overflow-auto">
           <div className="p-8">
-            {/* Header */}
             <div className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-900">Reports</h1>
-              <p className="text-gray-600 mt-2">View analytics and business metrics</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#c48379]">
+                Studio Reports
+              </p>
+              <h1
+                className="mt-3 text-4xl font-medium text-[#2e211c]"
+                style={{ fontFamily: 'var(--shivya-serif)' }}
+              >
+                Reports
+              </h1>
+              <p className="mt-2 text-[#897168]">View analytics and business metrics.</p>
             </div>
 
             {loading ? (
               <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                <p className="text-gray-600">Loading reports...</p>
+                <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-[#c48379]"></div>
+                <p className="text-[#897168]">Loading reports...</p>
               </div>
             ) : (
               <>
-                {/* Report Type Selector */}
                 <div className="mb-6 flex space-x-4">
                   <button
                     onClick={() => setReportType('revenue')}
-                    className={`px-6 py-2 rounded-lg font-medium transition-colors ${
+                    className={`rounded-full px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] transition-colors ${
                       reportType === 'revenue'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-white text-gray-900 border border-gray-200'
+                        ? 'bg-[linear-gradient(135deg,#d7a095,#e2b3ab)] text-white shadow-[0_18px_34px_rgba(213,160,147,0.22)]'
+                        : 'border border-[#ead8cf] bg-white text-[#2e211c]'
                     }`}
                   >
                     Revenue Report
                   </button>
                   <button
                     onClick={() => setReportType('bookings')}
-                    className={`px-6 py-2 rounded-lg font-medium transition-colors ${
+                    className={`rounded-full px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] transition-colors ${
                       reportType === 'bookings'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-white text-gray-900 border border-gray-200'
+                        ? 'bg-[linear-gradient(135deg,#d7a095,#e2b3ab)] text-white shadow-[0_18px_34px_rgba(213,160,147,0.22)]'
+                        : 'border border-[#ead8cf] bg-white text-[#2e211c]'
                     }`}
                   >
                     Booking Stats
                   </button>
                 </div>
 
-                {/* Revenue Report */}
                 {reportType === 'revenue' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div className="bg-white rounded-lg shadow-md p-6">
-                      <h3 className="text-gray-600 text-sm font-medium">Total Revenue</h3>
-                      <p className="text-3xl font-bold text-gray-900 mt-2">
+                    <div className="rounded-[1.5rem] border border-[#ead8cf] bg-white/90 p-6 shadow-[0_16px_36px_rgba(103,69,53,0.06)]">
+                      <h3 className="text-sm font-medium text-[#897168]">Total Revenue</h3>
+                      <p className="mt-2 text-3xl font-bold text-[#2e211c]">
                         {formatCurrency(revenueReport.totalRevenue)}
                       </p>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow-md p-6">
-                      <h3 className="text-gray-600 text-sm font-medium">Completed Bookings</h3>
-                      <p className="text-3xl font-bold text-gray-900 mt-2">
+                    <div className="rounded-[1.5rem] border border-[#ead8cf] bg-white/90 p-6 shadow-[0_16px_36px_rgba(103,69,53,0.06)]">
+                      <h3 className="text-sm font-medium text-[#897168]">Completed Bookings</h3>
+                      <p className="mt-2 text-3xl font-bold text-[#2e211c]">
                         {revenueReport.completedBookings}
                       </p>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow-md p-6">
-                      <h3 className="text-gray-600 text-sm font-medium">Average Booking</h3>
-                      <p className="text-3xl font-bold text-gray-900 mt-2">
+                    <div className="rounded-[1.5rem] border border-[#ead8cf] bg-white/90 p-6 shadow-[0_16px_36px_rgba(103,69,53,0.06)]">
+                      <h3 className="text-sm font-medium text-[#897168]">Average Booking</h3>
+                      <p className="mt-2 text-3xl font-bold text-[#2e211c]">
                         {formatCurrency(revenueReport.averageBookingPrice)}
                       </p>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow-md p-6">
-                      <h3 className="text-gray-600 text-sm font-medium">Last Updated</h3>
-                      <p className="text-sm text-gray-900 mt-2">{revenueReport.lastUpdated}</p>
+                    <div className="rounded-[1.5rem] border border-[#ead8cf] bg-white/90 p-6 shadow-[0_16px_36px_rgba(103,69,53,0.06)]">
+                      <h3 className="text-sm font-medium text-[#897168]">Last Updated</h3>
+                      <p className="mt-2 text-sm text-[#2e211c]">{revenueReport.lastUpdated}</p>
                     </div>
                   </div>
                 )}
 
-                {/* Booking Stats Report */}
                 {reportType === 'bookings' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-                    <div className="bg-white rounded-lg shadow-md p-6">
-                      <h3 className="text-gray-600 text-sm font-medium">Total Bookings</h3>
-                      <p className="text-3xl font-bold text-gray-900 mt-2">{bookingStats.total}</p>
+                    <div className="rounded-[1.5rem] border border-[#ead8cf] bg-white/90 p-6 shadow-[0_16px_36px_rgba(103,69,53,0.06)]">
+                      <h3 className="text-sm font-medium text-[#897168]">Total Bookings</h3>
+                      <p className="mt-2 text-3xl font-bold text-[#2e211c]">{bookingStats.total}</p>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-500">
-                      <h3 className="text-gray-600 text-sm font-medium">Pending</h3>
-                      <p className="text-3xl font-bold text-yellow-600 mt-2">{bookingStats.pending}</p>
+                    <div className="rounded-[1.5rem] border border-[#ead8cf] bg-white/90 p-6 shadow-[0_16px_36px_rgba(103,69,53,0.06)]">
+                      <h3 className="text-sm font-medium text-[#897168]">Pending</h3>
+                      <p className="mt-2 text-3xl font-bold text-[#9c6f43]">{bookingStats.pending}</p>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
-                      <h3 className="text-gray-600 text-sm font-medium">Confirmed</h3>
-                      <p className="text-3xl font-bold text-blue-600 mt-2">{bookingStats.confirmed}</p>
+                    <div className="rounded-[1.5rem] border border-[#ead8cf] bg-white/90 p-6 shadow-[0_16px_36px_rgba(103,69,53,0.06)]">
+                      <h3 className="text-sm font-medium text-[#897168]">Confirmed</h3>
+                      <p className="mt-2 text-3xl font-bold text-[#b47958]">{bookingStats.confirmed}</p>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
-                      <h3 className="text-gray-600 text-sm font-medium">Completed</h3>
-                      <p className="text-3xl font-bold text-green-600 mt-2">{bookingStats.completed}</p>
+                    <div className="rounded-[1.5rem] border border-[#ead8cf] bg-white/90 p-6 shadow-[0_16px_36px_rgba(103,69,53,0.06)]">
+                      <h3 className="text-sm font-medium text-[#897168]">Completed</h3>
+                      <p className="mt-2 text-3xl font-bold text-[#50745b]">{bookingStats.completed}</p>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-500">
-                      <h3 className="text-gray-600 text-sm font-medium">Cancelled</h3>
-                      <p className="text-3xl font-bold text-red-600 mt-2">{bookingStats.cancelled}</p>
+                    <div className="rounded-[1.5rem] border border-[#ead8cf] bg-white/90 p-6 shadow-[0_16px_36px_rgba(103,69,53,0.06)]">
+                      <h3 className="text-sm font-medium text-[#897168]">Cancelled</h3>
+                      <p className="mt-2 text-3xl font-bold text-[#a55a50]">{bookingStats.cancelled}</p>
                     </div>
                   </div>
                 )}
 
-                {/* Chart Placeholder */}
-                <div className="mt-8 bg-white rounded-lg shadow-md p-6">
-                  <h2 className="text-xl font-bold text-gray-900 mb-6">Trend Analysis</h2>
-                  <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200">
-                    <p className="text-gray-500">Chart visualization would go here</p>
+                <div className="mt-8 rounded-[1.75rem] border border-[#ead8cf] bg-white/90 p-6 shadow-[0_16px_36px_rgba(103,69,53,0.06)]">
+                  <h2 className="mb-6 text-xl font-bold text-[#2e211c]">Trend Analysis</h2>
+                  <div className="flex h-64 items-center justify-center rounded-[1.25rem] border border-dashed border-[#d9c1b5] bg-[#fffaf7]">
+                    <p className="text-[#897168]">Chart visualization would go here</p>
                   </div>
                 </div>
               </>

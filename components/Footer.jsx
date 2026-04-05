@@ -15,11 +15,11 @@ export default function Footer() {
             <div>
               <h3
                 className="text-2xl font-bold mb-4"
-                style={{ fontFamily: 'Playfair Display', color: '#E6B7A9' }}
+                style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#E6B7A9', fontWeight: 700 }}
               >
-                ✨ Elegance Nails
+                ✨ Shivya's Nail Studio
               </h3>
-              <p className="text-sm mb-6" style={{ color: '#777777', fontFamily: 'Inter' }}>
+              <p className="text-base mb-6" style={{ color: '#CCCCCC', fontFamily: 'Cormorant Garamond, Georgia, serif', fontWeight: 600 }}>
                 Your destination for premium nail artistry and exceptional service.
               </p>
               {/* Social Icons */}
@@ -50,17 +50,17 @@ export default function Footer() {
             <div>
               <h4
                 className="text-lg font-bold mb-4"
-                style={{ fontFamily: 'Playfair Display', color: '#E6B7A9' }}
+                style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#E6B7A9', fontWeight: 700 }}
               >
                 Quick Links
               </h4>
-              <ul className="space-y-2" style={{ fontFamily: 'Inter' }}>
+              <ul className="space-y-2" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', fontWeight: 600 }}>
                 {['Home', 'Services', 'Gallery', 'About', 'Book'].map((link) => (
                   <li key={link}>
                     <a
                       href={`#${link.toLowerCase()}`}
-                      className="text-sm hover:text-yellow-200 transition-colors"
-                      style={{ color: '#777777' }}
+                      className="text-base hover:text-yellow-200 transition-colors"
+                      style={{ color: '#AAAAAA' }}
                     >
                       {link}
                     </a>
@@ -73,30 +73,30 @@ export default function Footer() {
             <div>
               <h4
                 className="text-lg font-bold mb-4"
-                style={{ fontFamily: 'Playfair Display', color: '#E6B7A9' }}
+                style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#E6B7A9', fontWeight: 700 }}
               >
                 Working Hours
               </h4>
-              <div className="space-y-2" style={{ fontFamily: 'Inter', fontSize: '0.875rem' }}>
+              <div className="space-y-2" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '1rem', fontWeight: 600 }}>
                 <div className="flex items-start gap-2">
                   <Clock size={16} style={{ color: '#E6B7A9', marginTop: '2px' }} />
                   <div>
-                    <p style={{ color: '#FAF7F4' }}>Mon - Fri</p>
-                    <p style={{ color: '#777777' }}>9:00 AM - 7:00 PM</p>
+                    <p style={{ color: '#EEEEEE' }}>Mon - Fri</p>
+                    <p style={{ color: '#AAAAAA' }}>9:00 AM - 7:00 PM</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
                   <Clock size={16} style={{ color: '#E6B7A9', marginTop: '2px' }} />
                   <div>
-                    <p style={{ color: '#FAF7F4' }}>Saturday</p>
-                    <p style={{ color: '#777777' }}>10:00 AM - 6:00 PM</p>
+                    <p style={{ color: '#EEEEEE' }}>Saturday</p>
+                    <p style={{ color: '#AAAAAA' }}>10:00 AM - 6:00 PM</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
                   <Clock size={16} style={{ color: '#E6B7A9', marginTop: '2px' }} />
                   <div>
-                    <p style={{ color: '#FAF7F4' }}>Sunday</p>
-                    <p style={{ color: '#777777' }}>Closed</p>
+                    <p style={{ color: '#EEEEEE' }}>Sunday</p>
+                    <p style={{ color: '#AAAAAA' }}>Closed</p>
                   </div>
                 </div>
               </div>
@@ -106,17 +106,17 @@ export default function Footer() {
             <div>
               <h4
                 className="text-lg font-bold mb-4"
-                style={{ fontFamily: 'Playfair Display', color: '#E6B7A9' }}
+                style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#E6B7A9', fontWeight: 700 }}
               >
                 Contact Us
               </h4>
-              <div className="space-y-3" style={{ fontFamily: 'Inter', fontSize: '0.875rem' }}>
+              <div className="space-y-3" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '1rem', fontWeight: 600 }}>
                 <div className="flex items-center gap-3">
                   <Phone size={16} style={{ color: '#E6B7A9' }} />
                   <a
                     href="tel:+1234567890"
                     className="hover:text-yellow-200 transition-colors"
-                    style={{ color: '#777777' }}
+                    style={{ color: '#AAAAAA' }}
                   >
                     (123) 456-7890
                   </a>
@@ -124,16 +124,16 @@ export default function Footer() {
                 <div className="flex items-center gap-3">
                   <Mail size={16} style={{ color: '#E6B7A9' }} />
                   <a
-                    href="mailto:info@elegancenails.com"
+                    href="mailto:info@shivyasnailstudio.com"
                     className="hover:text-yellow-200 transition-colors"
-                    style={{ color: '#777777' }}
+                    style={{ color: '#AAAAAA' }}
                   >
-                    info@elegancenails.com
+                    info@shivyasnailstudio.com
                   </a>
                 </div>
                 <div className="flex items-start gap-3">
                   <MapPin size={16} style={{ color: '#E6B7A9', marginTop: '2px' }} />
-                  <p style={{ color: '#777777' }}>
+                  <p style={{ color: '#AAAAAA' }}>
                     123 Elegance Street<br />
                     Beautiful City, BC 12345
                   </p>
@@ -153,17 +153,17 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div className="px-4 py-8" style={{ backgroundColor: '#0F0F0F' }}>
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm" style={{ color: '#777777', fontFamily: 'Inter' }}>
-            © {currentYear} Elegance Nails. All rights reserved.
+          <p className="text-base" style={{ color: '#CCCCCC', fontFamily: 'Cormorant Garamond, Georgia, serif', fontWeight: 600 }}>
+            © {currentYear} Shivya's Nail Studio. All rights reserved.
           </p>
-          <div className="flex gap-6 text-sm" style={{ fontFamily: 'Inter' }}>
-            <a href="#" className="hover:text-yellow-200 transition-colors" style={{ color: '#777777' }}>
+          <div className="flex gap-6 text-base" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', fontWeight: 600 }}>
+            <a href="#" className="hover:text-yellow-200 transition-colors" style={{ color: '#AAAAAA' }}>
               Privacy Policy
             </a>
-            <a href="#" className="hover:text-yellow-200 transition-colors" style={{ color: '#777777' }}>
+            <a href="#" className="hover:text-yellow-200 transition-colors" style={{ color: '#AAAAAA' }}>
               Terms of Service
             </a>
-            <a href="#" className="hover:text-yellow-200 transition-colors" style={{ color: '#777777' }}>
+            <a href="#" className="hover:text-yellow-200 transition-colors" style={{ color: '#AAAAAA' }}>
               Cookie Policy
             </a>
           </div>

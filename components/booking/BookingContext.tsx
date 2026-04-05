@@ -123,7 +123,11 @@ export function BookingProvider({ children }: BookingProviderProps) {
         );
       }
 
-      setBooking(response.booking || bookingData);
+      setBooking({
+        ...bookingData,
+        id: response.bookingId || response.booking?.id,
+        status: response.booking?.status || bookingData.status,
+      });
       setCurrentStep(5); // Go to confirmation screen
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');

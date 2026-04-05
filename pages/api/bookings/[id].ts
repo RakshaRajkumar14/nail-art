@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '@/lib/supabase';
 import { isAdminToken } from '@/lib/auth';
+import { BookingRow, mapBookingRow } from '@/lib/supabaseMappers';
 
 interface ApiResponse {
   success: boolean;
@@ -24,14 +25,6 @@ export default async function handler(
   try {
     if (req.method === 'GET') {
       // Fetch single booking (admin only)
-      const authHeader = req.headers.authorization;
-      if (!isAdminToken(authHeader)) {
-        return res.status(401).json({
-          success: false,
-          error: 'Unauthorized - Admin access required',
-        });
-      }
-
       const { data, error } = await supabase
         .from('bookings')
         .select('*')
@@ -46,33 +39,80 @@ export default async function handler(
         });
       }
 
+      // Check auth: allow admins or the booking owner
+      const authHeader = req.headers.authorization;
+      let isAllowed = isAdminToken(authHeader);
+
+      if (!isAllowed && authHeader?.startsWith('Bearer ')) {
+        const token = authHeader.substring(7);
+        const { data: userData } = await supabase.auth.getUser(token);
+        if (userData?.user && userData.user.email === data.email) {
+          isAllowed = true;
+        }
+      }
+
+      if (!isAllowed) {
+        return res.status(401).json({
+          success: false,
+          error: 'Unauthorized - Admin or Owner access required',
+        });
+      }
+
       return res.status(200).json({
         success: true,
-        data,
+        data: mapBookingRow(data as BookingRow),
       });
     }
 
     if (req.method === 'PUT') {
       // Update booking (admin only)
-      const authHeader = req.headers.authorization;
-      if (!isAdminToken(authHeader)) {
-        return res.status(401).json({
+      const { data: existingBooking, error: fetchError } = await supabase
+        .from('bookings')
+        .select('email')
+        .eq('id', id)
+        .single();
+
+      if (fetchError || !existingBooking) {
+        return res.status(404).json({
           success: false,
-          error: 'Unauthorized - Admin access required',
+          error: 'Booking not found',
         });
       }
 
-      const { status, customerName, customerEmail, customerPhone, notes } = req.body;
+      // Check auth
+      const authHeader = req.headers.authorization;
+      let isAllowed = isAdminToken(authHeader);
+
+      if (!isAllowed && authHeader?.startsWith('Bearer ')) {
+        const token = authHeader.substring(7);
+        const { data: userData } = await supabase.auth.getUser(token);
+        if (userData?.user && userData.user.email === existingBooking.email) {
+          isAllowed = true;
+        }
+      }
+
+      if (!isAllowed) {
+        return res.status(401).json({
+          success: false,
+          error: 'Unauthorized - Admin or Owner access required',
+        });
+      }
+
+      const { status, customerName, customerEmail, customerPhone, notes, date, time, selectedServices, totalPrice } = req.body;
 
       const updateData: any = {
-        updatedAt: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
 
-      if (status) updateData.status = status;
-      if (customerName) updateData.customerName = customerName;
-      if (customerEmail) updateData.customerEmail = customerEmail;
-      if (customerPhone) updateData.customerPhone = customerPhone;
+      if (status && isAdminToken(authHeader)) updateData.status = status; // Only admin changes status
+      if (customerName) updateData.customer_name = customerName;
+      if (customerEmail) updateData.email = customerEmail;
+      if (customerPhone) updateData.phone = customerPhone;
       if (notes !== undefined) updateData.notes = notes;
+      if (date) updateData.date = date;
+      if (time) updateData.time = time;
+      if (totalPrice) updateData.total_price = totalPrice;
+      if (selectedServices) updateData.selected_services = selectedServices;
 
       const { data, error } = await supabase
         .from('bookings')
@@ -91,7 +131,7 @@ export default async function handler(
 
       return res.status(200).json({
         success: true,
-        data,
+        data: mapBookingRow(data as BookingRow),
       });
     }
 

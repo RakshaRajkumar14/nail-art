@@ -1,5 +1,6 @@
 import React from 'react';
 import { BarChart3, DollarSign, Calendar, CheckCircle } from 'lucide-react';
+import { formatCurrency } from '@/utils/admin-helpers';
 
 interface AdminStatsProps {
   totalBookings: number;
@@ -25,27 +26,27 @@ export default function AdminStats({
     },
     {
       title: 'Total Revenue',
-      value: `$${totalRevenue.toFixed(2)}`,
+      value: formatCurrency(totalRevenue),
       icon: DollarSign,
-      color: 'from-green-500 to-green-600',
-      bgColor: 'bg-green-100',
-      textColor: 'text-green-600',
+      color: 'from-[#d7a095] to-[#c48379]',
+      bgColor: 'bg-[#f6e7e0]',
+      textColor: 'text-[#b47958]',
     },
     {
       title: 'Upcoming Appointments',
       value: upcomingAppointments,
       icon: Calendar,
-      color: 'from-purple-500 to-purple-600',
-      bgColor: 'bg-purple-100',
-      textColor: 'text-purple-600',
+      color: 'from-[#e7c8ba] to-[#d7a095]',
+      bgColor: 'bg-[#f8eee8]',
+      textColor: 'text-[#b47958]',
     },
     {
       title: 'Completed Bookings',
       value: completedBookings,
       icon: CheckCircle,
-      color: 'from-orange-500 to-orange-600',
-      bgColor: 'bg-orange-100',
-      textColor: 'text-orange-600',
+      color: 'from-[#d9b8a8] to-[#b47958]',
+      bgColor: 'bg-[#f7ede7]',
+      textColor: 'text-[#945b3b]',
     },
   ];
 
@@ -56,12 +57,12 @@ export default function AdminStats({
         return (
           <div
             key={index}
-            className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+            className="rounded-[1.5rem] border border-[#ead8cf] bg-white/90 p-6 shadow-[0_16px_36px_rgba(103,69,53,0.06)] transition-shadow hover:shadow-[0_20px_40px_rgba(103,69,53,0.08)]"
           >
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-gray-600 text-sm font-medium">{stat.title}</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">{stat.value}</p>
+                <p className="text-sm font-medium text-[#897168]">{stat.title}</p>
+                <p className="mt-2 text-3xl font-bold text-[#2e211c]">{stat.value}</p>
               </div>
               <div className={`${stat.bgColor} p-3 rounded-lg`}>
                 <Icon className={`${stat.textColor}`} size={24} />

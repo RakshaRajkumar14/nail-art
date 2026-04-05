@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { LogOut, LayoutDashboard, Settings, Calendar, FileText } from 'lucide-react';
+import { SHIVYA_SITE_NAME } from '@/lib/shivyaContent';
 
 interface AdminSidebarProps {
   onLogout: () => void;
@@ -34,43 +35,48 @@ export default function AdminSidebar({ onLogout }: AdminSidebarProps) {
   ];
 
   return (
-    <div className="w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-white h-screen fixed left-0 top-0 overflow-y-auto">
-      {/* Logo */}
-      <div className="p-6 border-b border-gray-700">
-        <h2 className="text-2xl font-bold">✨ Admin</h2>
+    <div className="fixed left-0 top-0 h-screen w-72 overflow-y-auto border-r border-[#ead8cf]/60 bg-white/60 backdrop-blur-2xl px-5 py-6 text-[#2e211c] shadow-[4px_0_32px_rgba(180,121,88,0.08)] z-20 transition-all">
+      <div className="border-b border-[#ead8cf]/60 pb-6">
+        <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#c48379]">
+          Admin Panel
+        </p>
+        <h2
+          className="mt-3 text-4xl font-bold leading-none text-[#2e211c]"
+          style={{ fontFamily: 'var(--shivya-serif)' }}
+        >
+          {SHIVYA_SITE_NAME}
+        </h2>
       </div>
 
-      {/* Menu Items */}
-      <nav className="p-4">
+      <nav className="mt-8 space-y-3">
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = router.pathname === item.href;
 
           return (
-            <Link key={item.name} href={item.href}>
-              <a
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg mb-2 transition-all ${
-                  isActive
-                    ? 'bg-pink-500 text-white'
-                    : 'text-gray-300 hover:bg-gray-700'
-                }`}
-              >
-                <Icon size={20} />
-                <span>{item.name}</span>
-              </a>
+            <Link
+              key={item.name}
+              href={item.href}
+              className={`flex items-center space-x-4 rounded-2xl px-4 py-4 transition-all duration-300 font-bold text-lg ${
+                isActive
+                  ? 'bg-gradient-to-r from-[#d7a095] to-[#c48379] text-white shadow-[0_8px_20px_rgba(215,160,149,0.35)]'
+                  : 'text-[#6e5c54] hover:bg-white/80 hover:text-[#2e211c] hover:shadow-sm'
+              }`}
+            >
+              <Icon size={24} className={isActive ? 'text-white' : 'text-[#b47958]'} />
+              <span>{item.name}</span>
             </Link>
           );
         })}
       </nav>
 
-      {/* Logout Button */}
-      <div className="absolute bottom-6 left-4 right-4">
+      <div className="absolute bottom-6 left-5 right-5">
         <button
           onClick={onLogout}
-          className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg bg-red-600 hover:bg-red-700 transition-all text-white"
+          className="flex w-full items-center justify-center space-x-3 rounded-2xl border border-[#efe1d9] bg-white/70 px-4 py-4 text-base font-bold text-[#897168] transition-all hover:bg-white hover:text-[#c48379] hover:shadow-sm hover:border-[#e6c2bf]"
         >
           <LogOut size={20} />
-          <span>Logout</span>
+          <span>SIGN OUT</span>
         </button>
       </div>
     </div>

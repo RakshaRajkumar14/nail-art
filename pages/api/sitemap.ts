@@ -11,7 +11,10 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'https://yourdomain.com';
+const BASE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  process.env.NEXT_PUBLIC_APP_URL ||
+  'http://localhost:3000';
 
 async function generateSitemap() {
   const sitemap = [];
@@ -41,8 +44,7 @@ async function generateSitemap() {
   try {
     const { data: services, error: servicesError } = await supabase
       .from('services')
-      .select('id, name, updated_at')
-      .eq('active', true);
+      .select('id, updated_at');
 
     if (!servicesError && services) {
       for (const service of services) {

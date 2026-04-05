@@ -22,19 +22,19 @@ export default function Navigation() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/" className="text-2xl font-bold" style={{ color: '#1E1E1E', fontFamily: 'Playfair Display' }}>
-              ✨ Elegance Nails
+            <Link href="/" className="text-3xl font-bold" style={{ color: '#1E1E1E', fontFamily: 'Cormorant Garamond, Georgia, serif', fontWeight: 700 }}>
+              ✨ Shivya's Nail Studio
             </Link>
           </div>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-8">
+          <div className="hidden md:flex space-x-8" style={{ fontSize: '20px' }}>
             {menuItems.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className="transition-colors duration-300 font-medium hover:opacity-70"
-                style={{ color: '#1E1E1E', fontFamily: 'Inter' }}
+                className="tracking-widest uppercase transition-colors duration-300 hover:opacity-70"
+                style={{ color: '#1E1E1E', fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '20px', fontWeight: 600 }}
               >
                 {item.label}
               </Link>
@@ -70,8 +70,8 @@ export default function Navigation() {
             {/* Book Now Button */}
             <Link
               href="/book"
-              className="px-6 py-2 rounded-lg font-semibold transition-all duration-300 hover:shadow-lg transform hover:scale-105 inline-block"
-              style={{ backgroundColor: '#E6B7A9', color: '#FAF7F4', fontFamily: 'Inter' }}
+              className="px-8 py-3 rounded-full font-semibold tracking-wider uppercase transition-all duration-300 hover:opacity-90 inline-block"
+              style={{ backgroundColor: '#E6B7A9', color: '#FAF7F4', fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '20px', fontWeight: 700 }}
             >
               Book Now
             </Link>
@@ -98,8 +98,8 @@ export default function Navigation() {
               <Link
                 key={item.label}
                 href={item.href}
-                className="block px-3 py-2 rounded-md text-base font-medium transition-colors hover:opacity-70"
-                style={{ color: '#1E1E1E', fontFamily: 'Inter' }}
+                className="block px-3 py-2 rounded-md font-medium tracking-widest uppercase transition-colors hover:opacity-70"
+                style={{ color: '#1E1E1E', fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '20px', fontWeight: 600 }}
                 onClick={() => setIsOpen(false)}
               >
                 {item.label}
@@ -107,8 +107,8 @@ export default function Navigation() {
             ))}
             <Link
               href="/book"
-              className="w-full text-left px-3 py-2 rounded-md font-semibold transition-all inline-block"
-              style={{ backgroundColor: '#E6B7A9', color: '#FAF7F4', fontFamily: 'Inter' }}
+              className="w-full text-center px-3 py-3 rounded-full font-semibold tracking-wider uppercase transition-all inline-block"
+              style={{ backgroundColor: '#E6B7A9', color: '#FAF7F4', fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '20px', fontWeight: 700 }}
               onClick={() => setIsOpen(false)}
             >
               Book Now

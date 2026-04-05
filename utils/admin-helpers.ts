@@ -1,6 +1,48 @@
 /**
  * Utility functions for admin operations
  */
+import {
+  getBookingIntervalMinutes,
+  isScheduleBlockingStatus,
+  rangesOverlap,
+} from '@/lib/bookingTimeUtils';
+import { formatCurrency as formatEuro } from '@/lib/currency';
+
+export type BookingOverlapInput = {
+  id: string;
+  date: string;
+  timeSlot: string;
+  totalDuration: number;
+  status: string;
+};
+
+/** IDs of bookings that overlap another on the same day (pending/confirmed only). */
+export function computeOverlappingBookingIds(bookings: BookingOverlapInput[]): Set<string> {
+  const overlaps = new Set<string>();
+  const blocking = bookings.filter((b) => isScheduleBlockingStatus(b.status));
+  const byDate = new Map<string, BookingOverlapInput[]>();
+
+  for (const b of blocking) {
+    const list = byDate.get(b.date) || [];
+    list.push(b);
+    byDate.set(b.date, list);
+  }
+
+  byDate.forEach((list) => {
+    for (let i = 0; i < list.length; i++) {
+      const a = getBookingIntervalMinutes(list[i].timeSlot, list[i].totalDuration || 60);
+      for (let j = i + 1; j < list.length; j++) {
+        const b = getBookingIntervalMinutes(list[j].timeSlot, list[j].totalDuration || 60);
+        if (rangesOverlap(a.start, a.end, b.start, b.end)) {
+          overlaps.add(list[i].id);
+          overlaps.add(list[j].id);
+        }
+      }
+    }
+  });
+
+  return overlaps;
+}
 
 export function generateCSV(data: any[], headers: string[]): string {
   // Create header row
@@ -45,10 +87,7 @@ export function formatTime(time: string): string {
 }
 
 export function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(amount);
+  return formatEuro(amount);
 }
 
 export function formatDuration(minutes: number): string {

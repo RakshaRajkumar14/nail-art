@@ -58,6 +58,7 @@ export default async function handler(
 }
 
 function getMockRecommendations(preferences: any) {
+  const { budget = 100, occasion = 'casual' } = preferences || {};
   const allRecommendations = [
     {
       id: 1,

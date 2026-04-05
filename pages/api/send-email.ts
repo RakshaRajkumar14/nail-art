@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { formatCurrency } from '@/lib/currency';
 
 interface EmailRequest {
   to: string;
@@ -100,7 +101,8 @@ async function sendViaResend({
   const resendApiKey = process.env.RESEND_API_KEY;
 
   if (!resendApiKey) {
-    throw new Error('RESEND_API_KEY not configured');
+    console.log('[MOCK EMAIL] RESEND_API_KEY missing. Simulating sending email to:', to);
+    return `sim_${Date.now()}`;
   }
 
   const html = generateEmailTemplate(templateType, data);
@@ -112,11 +114,11 @@ async function sendViaResend({
       Authorization: `Bearer ${resendApiKey}`,
     },
     body: JSON.stringify({
-      from: process.env.NEXT_PUBLIC_EMAIL_FROM || 'noreply@elegancenails.com',
+      from: process.env.NEXT_PUBLIC_EMAIL_FROM || 'onboarding@resend.dev',
       to,
       subject,
       html,
-      replyTo: process.env.NEXT_PUBLIC_EMAIL_REPLY_TO || 'support@elegancenails.com',
+      replyTo: process.env.NEXT_PUBLIC_EMAIL_REPLY_TO || 'hello@shivyasnailstudio.com',
     }),
   });
 
@@ -161,11 +163,11 @@ async function sendViaSendGrid({
         },
       ],
       from: {
-        email: process.env.NEXT_PUBLIC_EMAIL_FROM || 'noreply@elegancenails.com',
-        name: 'Elegance Nails',
+        email: process.env.NEXT_PUBLIC_EMAIL_FROM || 'onboarding@resend.dev',
+        name: "Shivya's Nail Studio",
       },
       replyTo: {
-        email: process.env.NEXT_PUBLIC_EMAIL_REPLY_TO || 'support@elegancenails.com',
+        email: process.env.NEXT_PUBLIC_EMAIL_REPLY_TO || 'hello@shivyasnailstudio.com',
       },
       content: [
         {
@@ -299,13 +301,13 @@ function generateEmailTemplate(
 
   const footerHtml = `
       <div class="footer">
-        <p>© 2024 Elegance Nails. All rights reserved.</p>
+        <p>© 2026 Shivya's Nail Studio. All rights reserved.</p>
         <div>
-          <a href="https://facebook.com/elegancenails" class="social-link">Facebook</a>
-          <a href="https://instagram.com/elegancenails" class="social-link">Instagram</a>
-          <a href="https://twitter.com/elegancenails" class="social-link">Twitter</a>
+          <a href="https://instagram.com/shivyasnailstudio" class="social-link">Instagram</a>
+          <a href="https://pinterest.com/shivyasnailstudio" class="social-link">Pinterest</a>
+          <a href="https://wa.me/4915112345678" class="social-link">WhatsApp</a>
         </div>
-        <p><a href="mailto:support@elegancenails.com" style="color: #E6B7A9; text-decoration: none;">support@elegancenails.com</a></p>
+        <p><a href="mailto:hello@shivyasnailstudio.com" style="color: #E6B7A9; text-decoration: none;">hello@shivyasnailstudio.com</a></p>
       </div>
       </div>
     </body>
@@ -318,7 +320,7 @@ function generateEmailTemplate(
     middleHtml = `
       <div class="header">
         <h1>✨ Booking Confirmed!</h1>
-        <p>Thank you for choosing Elegance Nails</p>
+        <p>Thank you for choosing Shivya's Nail Studio</p>
       </div>
       <div class="content">
         <p>Hi ${data.customerName || 'Guest'},</p>
@@ -341,26 +343,24 @@ function generateEmailTemplate(
         <div class="section">
           <div class="label">Services</div>
           <div style="color: #1E1E1E;">
-            ${
-              data.services && data.services.length > 0
-                ? data.services.map((s: string) => `<div>• ${s}</div>`).join('')
-                : '<div>Premium Nail Services</div>'
-            }
+            ${data.services && data.services.length > 0
+        ? data.services.map((s: string) => `<div>• ${s}</div>`).join('')
+        : '<div>Premium Nail Services</div>'
+      }
           </div>
         </div>
 
-        ${
-          data.totalPrice
-            ? `
+        ${data.totalPrice
+        ? `
           <div class="section">
             <div class="label">Total Amount</div>
             <div style="font-size: 20px; color: #E6B7A9; font-weight: bold;">
-              $${parseFloat(data.totalPrice).toFixed(2)}
+              ${formatCurrency(parseFloat(data.totalPrice))}
             </div>
           </div>
         `
-            : ''
-        }
+        : ''
+      }
 
         <div style="background-color: #FAF7F4; padding: 20px; border-radius: 6px; margin: 20px 0;">
           <h3 style="margin-top: 0; color: #1E1E1E;">What's Next?</h3>
@@ -372,11 +372,11 @@ function generateEmailTemplate(
           </ol>
         </div>
 
-        <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://elegancenails.com'}/bookings" class="button">View Your Booking</a>
+        <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://shivyasnalstudio.com'}/book/confirmed" class="button">View Your Booking</a>
 
         <p style="color: #999; font-size: 14px;">
-          Questions? Contact us at <a href="tel:+1234567890" style="color: #E6B7A9; text-decoration: none;">+1 (234) 567-8900</a>
-          or message us on <a href="https://wa.me/1234567890" style="color: #E6B7A9; text-decoration: none;">WhatsApp</a>
+          Questions? Contact us at <a href="tel:+4915112345678" style="color: #E6B7A9; text-decoration: none;">+49 151 12345678</a>
+          or message us on <a href="https://wa.me/4915112345678" style="color: #E6B7A9; text-decoration: none;">WhatsApp</a>
         </p>
       </div>
     `;
@@ -396,7 +396,7 @@ function generateEmailTemplate(
           </div>
           <div class="detail-row">
             <span class="detail-label">Location:</span>
-            <span class="detail-value">123 Elegance Street, Beautiful City, BC 12345</span>
+            <span class="detail-value">Alexanderplatz, 10178 Berlin</span>
           </div>
           <div class="detail-row">
             <span class="detail-label">Duration:</span>
@@ -406,7 +406,7 @@ function generateEmailTemplate(
 
         <p>Please arrive 10 minutes early. If you need to reschedule, let us know as soon as possible.</p>
 
-        <a href="https://wa.me/1234567890" class="button">Message us on WhatsApp</a>
+        <a href="https://wa.me/4915112345678" class="button">Message us on WhatsApp</a>
       </div>
     `;
   } else if (templateType === 'booking-cancelled') {
@@ -431,14 +431,14 @@ function generateEmailTemplate(
 
         <p>${data.message || 'If you would like to rebook, please visit our website or contact us.'}</p>
 
-        <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://elegancenails.com'}/booking" class="button">Book Again</a>
+        <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://shivyasnalstudio.com'}/services" class="button">Book Again</a>
       </div>
     `;
   } else {
     // Custom template
     middleHtml = `
       <div class="header">
-        <h1>${data.title || 'Message from Elegance Nails'}</h1>
+        <h1>${data.title || "Message from Shivya's Nail Studio"}</h1>
       </div>
       <div class="content">
         <p>${data.message || 'Hello,'}</p>
@@ -459,7 +459,7 @@ function generateEmailTemplate(
  *   headers: { 'Content-Type': 'application/json' },
  *   body: JSON.stringify({
  *     to: 'customer@example.com',
- *     subject: 'Booking Confirmation - Elegance Nails',
+ *     subject: "Booking Confirmation - Shivya's Nail Studio",
  *     templateType: 'booking-confirmation',
  *     data: {
  *       customerName: 'Sarah',
