@@ -43,25 +43,44 @@
 
 html {
   scroll-behavior: smooth;
-  font-size: 106.25%;
+  font-size: 100%; /* Reset for mobile - 16px base */
+}
+
+/* Scale up slightly on tablets */
+@media (min-width: 640px) {
+  html {
+    font-size: 106.25%;
+  }
+}
+
+/* Full scale on desktop */
+@media (min-width: 1024px) {
+  html {
+    font-size: 118.75%;
+  }
 }
 
 body {
   font-family: var(--shivya-serif);
   background: var(--luxe-bg);
   color: var(--luxe-ink);
-  line-height: 1.58;
+  line-height: 1.65;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-weight: 600;
-  font-size: 1.0625rem;
+  font-weight: 700;
+  font-size: 1rem; /* Reduced from 1.15rem - mobile first */
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--shivya-serif);
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 a {
@@ -212,6 +231,7 @@ button {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -227,6 +247,7 @@ button {
     transform: translateX(100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -242,6 +263,7 @@ button {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -253,6 +275,7 @@ button {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -261,9 +284,12 @@ button {
 
 /* Glow Animation */
 @keyframes glow {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 5px rgba(230, 183, 169, 0.5);
   }
+
   50% {
     box-shadow: 0 0 20px rgba(230, 183, 169, 0.8);
   }
@@ -279,15 +305,19 @@ button {
   0% {
     background-position: -200% center;
   }
+
   100% {
     background-position: 200% center;
   }
 }
 
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-8px);
   }

@@ -120,6 +120,11 @@ export default function BookingsView({ adminToken }: BookingsViewProps) {
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
+    
+    // Auto-apply filters when status is changed directly from the dropdown to prevent confusion
+    if (name === 'status') {
+      setAppliedFilters((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleFilterApply = () => {
@@ -381,9 +386,8 @@ export default function BookingsView({ adminToken }: BookingsViewProps) {
                 {sortedBookings.map((booking) => (
                   <tr
                     key={booking.id}
-                    className={`transition-colors hover:bg-[#fffaf7]/90 ${
-                      overlapIds.has(booking.id) ? 'bg-amber-50/40' : ''
-                    }`}
+                    className={`transition-colors hover:bg-[#fffaf7]/90 ${overlapIds.has(booking.id) ? 'bg-amber-50/40' : ''
+                      }`}
                   >
                     <td className="px-5 py-4 align-top">
                       <div className="flex flex-col gap-1">

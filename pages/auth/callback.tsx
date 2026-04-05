@@ -21,9 +21,9 @@ export default function AuthCallback() {
         if (session) {
           const userSession = {
             email: session.user.email || '',
-            name: session.user.user_metadata?.full_name || 
-                  session.user.user_metadata?.name || 
-                  session.user.email?.split('@')[0] || 'User',
+            name: session.user.user_metadata?.full_name ||
+              session.user.user_metadata?.name ||
+              session.user.email?.split('@')[0] || 'User',
             source: 'supabase' as const,
           };
 
@@ -48,15 +48,15 @@ export default function AuthCallback() {
         <div className={styles.container}>
           <div className={styles.header}>
             <h1 className={styles.brand}>
-              Luxe<span className={styles.brandAccent}>Nails</span>
+              Shivya's <span className={styles.brandAccent}>Nail Studio</span>
             </h1>
             <p className={styles.subtitle}>Completing sign in...</p>
           </div>
           <div className={styles.card}>
             <div style={{ textAlign: 'center', padding: '2rem' }}>
-              <div style={{ 
-                width: '40px', 
-                height: '40px', 
+              <div style={{
+                width: '40px',
+                height: '40px',
                 border: '3px solid rgba(215, 160, 149, 0.3)',
                 borderTopColor: '#d7a095',
                 borderRadius: '50%',

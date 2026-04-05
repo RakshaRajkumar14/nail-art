@@ -105,7 +105,7 @@ export default async function handler(
         query = query.ilike('customer_name', `%${customerName as string}%`);
       }
       if (status) {
-        query = query.eq('status', status as string);
+        query = query.ilike('status', status as string);
       }
 
       const { data, error } = await query
@@ -189,6 +189,33 @@ export default async function handler(
 
       const savedBooking = mapBookingRow(data as BookingRow);
 
+      // Trigger Confirmation Email asynchronously so it won't block the UI
+      try {
+        const protocol = process.env.NODE_ENV === 'production' ? 'https://' : 'http://';
+        const host = req.headers.host || 'localhost:3000';
+        const baseUrl = `${protocol}${host}`;
+
+        await fetch(`${baseUrl}/api/send-email`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            to: customerEmail,
+            subject: "Booking Confirmed - Shivya's Nail Studio",
+            templateType: 'booking-confirmation',
+            data: {
+              customerName,
+              bookingRef: savedBooking.id.substring(0, 8).toUpperCase(),
+              date,
+              time: timeSlot,
+              services: selectedServices.map((s: any) => s.title || s.bookingName || s.name || 'Service'),
+              totalPrice
+            }
+          })
+        });
+      } catch (err) {
+        console.error("Failed to execute email request:", err);
+      }
+
       return res.status(201).json({
         success: true,
         message: 'Booking created successfully',
@@ -201,10 +228,10 @@ export default async function handler(
             req.body?.timeSlot && typeof req.body.timeSlot === 'object'
               ? req.body.timeSlot
               : {
-                  id: `slot-${timeSlot}`,
-                  time: timeSlot,
-                  available: true,
-                },
+                id: `slot-${timeSlot}`,
+                time: timeSlot,
+                available: true,
+              },
           customerDetails: {
             name: customerName,
             email: customerEmail,

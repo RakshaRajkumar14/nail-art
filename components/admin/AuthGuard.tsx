@@ -58,11 +58,11 @@ export default function AuthGuard({ children, onTokenReceived }: AuthGuardProps)
     );
   }
 
-  if (!isAuthenticated) {
-    return (
-      <>
-        <SparkleEffect />
-        
+  return (
+    <>
+      <SparkleEffect />
+
+      {!isAuthenticated ? (
         <div className={styles.page}>
           <button onClick={() => router.push('/')} className={styles.backLink}>
             <ArrowLeft size={20} />
@@ -85,7 +85,7 @@ export default function AuthGuard({ children, onTokenReceived }: AuthGuardProps)
                   <input
                     type="email"
                     className={styles.input}
-                    placeholder="admin@luxenails.com"
+                    placeholder="admin@shivyasNailstudio.com"
                     value={credentials.email}
                     onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
                     required
@@ -120,9 +120,9 @@ export default function AuthGuard({ children, onTokenReceived }: AuthGuardProps)
             </div>
           </div>
         </div>
-      </>
-    );
-  }
-
-  return <>{children}</>;
+      ) : (
+        children
+      )}
+    </>
+  );
 }

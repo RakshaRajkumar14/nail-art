@@ -25,7 +25,7 @@ export const SHIVYA_SERVICES: ShivyaService[] = [
     eyebrow: 'Sculpted length',
     description:
       'Premium hard gel sculpted for weightless durability and a crystal-clear finish that looks naturally sophisticated.',
-    image: '/images/luxe/service-extensions.jpg',
+    image: '/images/luxe/gel full set.png',
   },
   {
     id: 'only-polish',
@@ -36,7 +36,7 @@ export const SHIVYA_SERVICES: ShivyaService[] = [
     eyebrow: 'Refined essential',
     description:
       'Pure, polished perfection. Cuticle care, shaping, and your choice of high-performance lacquer — nothing more, nothing less.',
-    image: '/images/luxe/service-gel-manicure.jpg',
+    image: '/images/luxe/only polish.png',
   },
   {
     id: 'acrylic-full-set',
@@ -47,7 +47,7 @@ export const SHIVYA_SERVICES: ShivyaService[] = [
     eyebrow: 'Lasting strength',
     description:
       'The gold standard in strength. Perfectly balanced architecture tailored to your natural nail shape, finished to your chosen gloss.',
-    image: '/images/luxe/gallery-nails.jpg',
+    image: '/images/luxe/acrylic.png',
   },
   {
     id: 'natural-manicure',
@@ -58,7 +58,7 @@ export const SHIVYA_SERVICES: ShivyaService[] = [
     eyebrow: 'Editorial detail',
     description:
       'A thoughtful ritual for your natural nails — detailed shaping, cuticle work, hand massage, and a flawless tinted finish.',
-    image: '/images/luxe/service-nail-art.jpg',
+    image: '/images/luxe/manicure1.png',
   },
   {
     id: 'clean-manicure',
@@ -69,7 +69,7 @@ export const SHIVYA_SERVICES: ShivyaService[] = [
     eyebrow: 'Pure clarity',
     description:
       'A clean slate for your nails. Gentle shaping, buff, and a nude or clear finish for effortless everyday elegance.',
-    image: '/images/luxe/service-gel-manicure.jpg',
+    image: '/images/luxe/manicure2.png',
   },
 ];
 
@@ -148,7 +148,7 @@ export const SHIVYA_PRIMARY_LINKS = [
 export const SHIVYA_FOOTER_LINKS = [
   { label: 'Services', href: '/services' },
   { label: 'Book', href: '/services' },
-  { label: 'Contact', href: '/#contact' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 export const SHIVYA_DEFAULT_SERVICE = SHIVYA_SERVICES[0];

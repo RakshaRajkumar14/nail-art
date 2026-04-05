@@ -47,14 +47,14 @@ export default function ServicesPage() {
   const handleToggleService = (serviceId: string) => {
     setSelectedServiceIds((prev) => {
       const isSelected = prev.includes(serviceId);
-      const next = isSelected 
+      const next = isSelected
         ? prev.filter((id) => id !== serviceId)
         : [...prev, serviceId];
-        
+
       setTimeout(() => {
         storeSelectedServices(next);
       }, 0);
-      
+
       return next;
     });
   };
@@ -92,7 +92,7 @@ export default function ServicesPage() {
         <title>{`Services | ${SHIVYA_SITE_NAME}`}</title>
         <meta
           name="description"
-          content="Choose one or more services at Shivya's Nal Studio before moving into the date and time step of your booking."
+          content="Choose one or more services at Shivya's Nail Studio before moving into the date and time step of your booking."
         />
       </Head>
 
@@ -132,9 +132,8 @@ export default function ServicesPage() {
                     </div>
                     <button
                       type="button"
-                      className={`${styles.cardButton} ${
-                        isSelected ? styles.cardButtonActive : ''
-                      }`}
+                      className={`${styles.cardButton} ${isSelected ? styles.cardButtonActive : ''
+                        }`}
                       onClick={() => handleToggleService(service.id)}
                     >
                       {isSelected ? <Check size={13} /> : <Plus size={13} />}
@@ -154,9 +153,8 @@ export default function ServicesPage() {
                   return (
                     <article
                       key={enhancement.id}
-                      className={`${styles.enhancementCard} ${
-                        isActive ? styles.enhancementActive : ''
-                      }`}
+                      className={`${styles.enhancementCard} ${isActive ? styles.enhancementActive : ''
+                        }`}
                     >
                       <h3 className={styles.enhancementName}>{enhancement.name}</h3>
                       <p className={styles.enhancementText}>{enhancement.description}</p>

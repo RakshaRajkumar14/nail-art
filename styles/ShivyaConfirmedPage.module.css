@@ -259,31 +259,7 @@
 .mapCard {
   position: relative;
   min-height: 12.5rem;
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0)),
-    linear-gradient(180deg, #726d69, #817b77);
-}
-
-.mapCard::before {
-  content: '';
-  position: absolute;
-  inset: 1rem;
-  border-radius: 1rem;
-  background:
-    linear-gradient(0deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12)),
-    repeating-linear-gradient(90deg, transparent 0, transparent 18px, rgba(255, 255, 255, 0.26) 18px, rgba(255, 255, 255, 0.26) 20px),
-    repeating-linear-gradient(0deg, transparent 0, transparent 22px, rgba(255, 255, 255, 0.16) 22px, rgba(255, 255, 255, 0.16) 24px);
-}
-
-.mapPin {
-  position: absolute;
-  inset: 50% auto auto 50%;
-  transform: translate(-50%, -50%);
-  width: 0.95rem;
-  height: 0.95rem;
-  border-radius: 999px;
-  background: white;
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2);
+  background: #f1efed;
 }
 
 .socialBlock {

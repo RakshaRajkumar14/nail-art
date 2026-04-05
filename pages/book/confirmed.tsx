@@ -52,7 +52,7 @@ export default function BookingConfirmedPage() {
         <title>{`Appointment Confirmed | ${SHIVYA_SITE_NAME}`}</title>
         <meta
           name="description"
-          content="Your Shivya's Nal Studio appointment is confirmed. Review your details and prepare for your artful experience."
+          content="Your Shivya's Nail Studio appointment is confirmed. Review your details and prepare for your artful experience."
         />
       </Head>
 
@@ -111,8 +111,8 @@ export default function BookingConfirmedPage() {
                       <p className={styles.cardLabel}>Estimated Total</p>
                       <div className={styles.summaryAmount}>{formatCurrency(confirmation.totalPrice)}</div>
                     </div>
-                    <Link href="/services" className={styles.modifyLink}>
-                      Modify
+                    <Link href={`/book?editId=${confirmation.bookingId}`} className={styles.modifyLink}>
+                      Edit Appointment
                     </Link>
                   </div>
                 </div>
@@ -120,42 +120,70 @@ export default function BookingConfirmedPage() {
 
               <article className={styles.imageCard}>
                 <img
-                  src="/images/luxe/gallery-nails.jpg"
-                  alt="Artful manicure close-up"
+                  src="/images/luxe/nail_art_supplies.png"
+                  alt="Aesthetic professional nail art tools on a flat lay table"
                 />
                 <div className={styles.imageOverlay}>
                   <div className={styles.imageLabel}>Our Aesthetic</div>
-                  <div className={styles.imageTitle}>Crafted with precision, inspired by silence.</div>
+                  <div className={styles.imageTitle}>Crafted with precision in a warm home environment.</div>
                 </div>
               </article>
 
               <article className={styles.studioCard}>
-                <p className={styles.studioTitle}>The Studio</p>
+                <p className={styles.studioTitle}>Home Studio</p>
                 <h2 className={styles.studioAddress}>
-                  124 Atelier Row,
+                  Alexanderplatz,
                   <br />
-                  Suite 400, New York,
+                  10178 Berlin,
                   <br />
-                  NY
+                  Germany
                 </h2>
 
-                <a href="tel:+12125550198" className={styles.studioPhone}>
+                <a href="tel:+4915112345678" className={styles.studioPhone}>
                   <Phone size={16} />
-                  <span>+1 (212) 555-0198</span>
+                  <span>+49 151 12345678</span>
                 </a>
 
                 <div className={styles.studioActions}>
-                  <Link href="/#contact" className={styles.directionsLink}>
+                  <a href="https://maps.google.com/?q=Alexanderplatz,10178+Berlin,Germany" target="_blank" rel="noopener noreferrer" className={styles.directionsLink}>
                     Get Directions
-                  </Link>
-                  <button type="button" className={styles.shareButton} aria-label="Share booking details">
+                  </a>
+                  <button 
+                    type="button" 
+                    className={styles.shareButton} 
+                    aria-label="Share booking details"
+                    onClick={async () => {
+                      const shareData = {
+                        title: "Booking at Shivya's Nail Studio",
+                        text: `I'm getting my nails done! Appointment confirmed for ${confirmation?.serviceName} at Alexanderplatz, Berlin.`,
+                        url: window.location.origin,
+                      };
+                      if (navigator.share) {
+                        try {
+                          await navigator.share(shareData);
+                        } catch (err) {
+                          console.log('Share error', err);
+                        }
+                      } else {
+                        navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`);
+                        alert('Details copied to clipboard!');
+                      }
+                    }}
+                  >
                     <Share2 size={16} />
                   </button>
                 </div>
               </article>
 
               <article className={styles.mapCard}>
-                <div className={styles.mapPin} />
+                <iframe 
+                  width="100%" 
+                  height="100%" 
+                  frameBorder="0" 
+                  style={{ border: 0, minHeight: '12.5rem', width: '100%', height: '100%', display: 'block', borderRadius: 'inherit' }} 
+                  src="https://maps.google.com/maps?q=Alexanderplatz,Berlin&t=&z=14&ie=UTF8&iwloc=&output=embed" 
+                  allowFullScreen
+                ></iframe>
               </article>
             </section>
 

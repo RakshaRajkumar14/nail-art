@@ -1,8 +1,10 @@
 import Head from 'next/head';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { Gem, Heart, Palette, Sparkles } from 'lucide-react';
 import { SiteChrome } from '@/components/shivya/SiteChrome';
 import { SparkleEffect } from '@/components/SparkleEffect';
+import { StardustCanvas } from '@/components/shivya/StardustCanvas';
 import { formatStartingPrice } from '@/lib/currency';
 import {
   SHIVYA_BOOKING_START_ROUTE,
@@ -12,7 +14,7 @@ import {
   SHIVYA_SERVICES,
 } from '@/lib/shivyaContent';
 import { formatDurationDisplay } from '@/lib/bookingTimeUtils';
-import styles from '@/styles/LuxeHomePage.module.css';
+import styles from '@/styles/ShivyaHomePage.module.css';
 
 const SERVICE_ICONS = {
   signature: Sparkles,
@@ -29,37 +31,60 @@ export default function HomePage() {
         <title>{`${SHIVYA_SITE_NAME} | Luxury Nail Artistry`}</title>
         <meta
           name="description"
-          content="Shivya's Nal Studio offers luxury nail artistry, private appointments, and a services-first booking flow for bespoke manicures and custom sets."
+          content="Shivya's Nail Studio offers luxury nail artistry, private appointments, and a services-first booking flow for bespoke manicures and custom sets."
         />
       </Head>
 
       <SiteChrome active="home" contentMode="full">
         <SparkleEffect />
         <main className={styles.page}>
-          <section className={styles.hero}>
+          <section className={styles.hero} style={{ position: 'relative', overflow: 'hidden' }}>
+            <StardustCanvas />
             <div className={styles.heroBg}>
-              <img src="/images/luxe/hero-nails.jpg" alt="Luxury nail collection at Shivya's Nal Studio" />
+              <img src="/images/luxe/hero-nails.jpg" alt="Luxury nail collection at Shivya's Nail Studio" />
             </div>
             <div className={styles.heroOverlay} />
             <div className={styles.heroContent}>
-              <p className={styles.heroEyebrow}>Premium Nail Art Studio</p>
-              <h1 className={styles.heroTitle}>
+              <motion.p
+                className={styles.heroEyebrow}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+              >
+                Premium Nail Art Studio
+              </motion.p>
+              <motion.h1
+                className={styles.heroTitle}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+              >
                 Where Beauty
                 <br />
                 Meets <em>Artistry</em>
-              </h1>
-              <p className={styles.heroText}>
+              </motion.h1>
+              <motion.p
+                className={styles.heroText}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+              >
                 Shivya&apos;s Nal Studio pairs quiet luxury with custom nail artistry,
                 from polished essentials to statement sets made just for you.
-              </p>
-              <div className={styles.heroActions}>
+              </motion.p>
+              <motion.div
+                className={styles.heroActions}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.7 }}
+              >
                 <Link href={SHIVYA_BOOKING_START_ROUTE} className={styles.btnPrimary}>
                   Start Booking
                 </Link>
                 <Link href="/services" className={styles.btnSecondary}>
                   Our Services
                 </Link>
-              </div>
+              </motion.div>
             </div>
           </section>
 
@@ -74,10 +99,17 @@ export default function HomePage() {
             </p>
 
             <div className={styles.servicesGrid}>
-              {SHIVYA_SERVICES.map((service) => {
+              {SHIVYA_SERVICES.map((service, index) => {
                 const Icon = SERVICE_ICONS[service.category];
                 return (
-                  <article key={service.id} className={styles.serviceCard}>
+                  <motion.article
+                    key={service.id}
+                    className={styles.serviceCard}
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, margin: "-50px" }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                  >
                     <div className={styles.serviceCardIcon}>
                       <Icon size={20} />
                     </div>
@@ -95,7 +127,7 @@ export default function HomePage() {
                         </span>
                       </div>
                     </div>
-                  </article>
+                  </motion.article>
                 );
               })}
             </div>
@@ -119,14 +151,14 @@ export default function HomePage() {
               </article>
               <article className={styles.galleryCard}>
                 <img
-                  src="/images/luxe/salon-interior.jpg"
-                  alt="Luxury nail studio interior"
+                  src="/images/luxe/cozy_home_nail_setup.png"
+                  alt="Aesthetic and warm at-home nail setup"
                 />
                 <div className={styles.galleryOverlay}>
                   <div>
-                    <p className={styles.galleryLabel}>Our Studio</p>
+                    <p className={styles.galleryLabel}>Home Studio</p>
                     <h3 className={styles.galleryCardTitle}>
-                      A space designed for quiet luxury.
+                      A cozy, beautiful space designed for your comfort.
                     </h3>
                   </div>
                 </div>
@@ -145,11 +177,18 @@ export default function HomePage() {
                 first click to the final topcoat.
               </p>
               <div className={styles.featuresGrid}>
-                {SHIVYA_HOME_FEATURES.map((feature) => (
-                  <article key={feature.title} className={styles.featureCard}>
+                {SHIVYA_HOME_FEATURES.map((feature, index) => (
+                  <motion.article
+                    key={feature.title}
+                    className={styles.featureCard}
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, margin: "-50px" }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                  >
                     <h3 className={styles.featureTitle}>{feature.title}</h3>
                     <p className={styles.featureDesc}>{feature.description}</p>
-                  </article>
+                  </motion.article>
                 ))}
               </div>
             </div>
@@ -164,14 +203,21 @@ export default function HomePage() {
               A seamless experience from choosing your service to sitting in the chair.
             </p>
             <div className={styles.stepsGrid}>
-              {SHIVYA_BOOKING_STEPS.map((item) => (
-                <div key={item.step} className={styles.stepCard}>
+              {SHIVYA_BOOKING_STEPS.map((item, index) => (
+                <motion.div
+                  key={item.step}
+                  className={styles.stepCard}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: false, margin: "-50px" }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                >
                   <span className={styles.stepNum}>{item.step}</span>
                   <div>
                     <h3 className={styles.stepTitle}>{item.title}</h3>
                     <p className={styles.stepDesc}>{item.description}</p>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>

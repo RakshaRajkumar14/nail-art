@@ -12,13 +12,13 @@ export default function ServicesPage() {
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
     setAdminToken('');
-    router.push('/admin');
+    router.push('/');
     toast.success('Logged out successfully!');
   };
 
   return (
     <AuthGuard onTokenReceived={setAdminToken}>
-      <div className="flex min-h-screen bg-[#fcf7f2]">
+      <div className="flex min-h-screen bg-transparent relative z-10">
         <AdminSidebar onLogout={handleLogout} />
 
         <div className="ml-72 flex-1 overflow-auto">

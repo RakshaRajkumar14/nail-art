@@ -24,8 +24,11 @@ import {
   SELECTED_SERVICE_KEY,
   SELECTED_SERVICES_KEY,
   storeBookingConfirmation,
+  storeSelectedServices,
+  clearSelectedEnhancements
 } from '@/lib/shivyaStorage';
 import { readUserSession } from '@/lib/userSession';
+import { supabase } from '@/lib/supabase';
 import { getAvailableDates } from '@/components/booking/utils';
 import { formatDurationDisplay } from '@/lib/bookingTimeUtils';
 import styles from '@/styles/ShivyaBookPage.module.css';
@@ -134,6 +137,50 @@ export default function BookPage() {
     setIsAuthenticated(true);
     setIsCheckingAuth(false);
   }, [router]);
+
+  const editId = router.query.editId as string | undefined;
+
+  useEffect(() => {
+    if (!editId) return;
+
+    const fetchBookingToEdit = async () => {
+      try {
+        const { data: sessionData } = await supabase.auth.getSession();
+        const token = sessionData?.session?.access_token || '';
+
+        const res = await fetch(`/api/bookings/${editId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        const payload = await res.json();
+
+        if (payload.success) {
+          const booking = payload.data;
+
+          setCustomer({
+            name: booking.customerName || '',
+            email: booking.customerEmail || '',
+            phone: booking.customerPhone || '',
+            notes: booking.notes || '',
+          });
+
+          if (booking.date) {
+            const [y, m, d] = booking.date.split('-');
+            setSelectedDate(new Date(Number(y), Number(m) - 1, Number(d)));
+            setCurrentMonth(new Date(Number(y), Number(m) - 1, 1));
+          }
+          if (booking.timeSlot) {
+            setSelectedTime(booking.timeSlot);
+          }
+        }
+      } catch (err) {
+        toast.error('Could not load appointment details.');
+      }
+    };
+
+    fetchBookingToEdit();
+  }, [editId]);
 
   useEffect(() => {
     const syncSelections = () => {
@@ -251,11 +298,20 @@ export default function BookPage() {
     try {
       setSubmitting(true);
 
-      const response = await fetch('/api/bookings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const endpoint = editId ? `/api/bookings/${editId}` : '/api/bookings';
+      const method = editId ? 'PUT' : 'POST';
+
+      let headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (editId) {
+        const { data: session } = await supabase.auth.getSession();
+        if (session?.session?.access_token) {
+          headers['Authorization'] = `Bearer ${session.session.access_token}`;
+        }
+      }
+
+      const response = await fetch(endpoint, {
+        method,
+        headers,
         body: JSON.stringify({
           services: selectedItems.map((item) => ({
             id: item.id,
@@ -283,8 +339,10 @@ export default function BookPage() {
         throw new Error(payload.error || 'Unable to confirm appointment');
       }
 
+      const finalBookingId = editId || payload.bookingId;
+
       storeBookingConfirmation({
-        bookingId: payload.bookingId,
+        bookingId: finalBookingId,
         serviceName: selectedServices.map((s) => s.bookingName || s.name).join(', '),
         servicePrice: totalPrice,
         totalPrice,
@@ -297,7 +355,11 @@ export default function BookPage() {
         enhancements: selectedEnhancements.map((item) => item.name),
       });
 
-      toast.success('Appointment confirmed.');
+      storeSelectedServices([]);
+      clearSelectedEnhancements();
+
+      toast.success(editId ? 'Appointment updated.' : 'Appointment confirmed.');
+      setShowDetailsModal(false);
       router.push('/book/confirmed');
     } catch (error) {
       console.error(error);
@@ -337,7 +399,7 @@ export default function BookPage() {
         <title>{`Choose Date & Time | ${SHIVYA_SITE_NAME}`}</title>
         <meta
           name="description"
-          content="Review your selected services, then choose the date and time for your appointment at Shivya's Nal Studio."
+          content="Review your selected services, then choose the date and time for your appointment at Shivya's Nail Studio."
         />
       </Head>
 
@@ -425,137 +487,135 @@ export default function BookPage() {
               </section>
 
               <section className={styles.layout}>
-            <div className={styles.calendarCard}>
-              <div className={styles.calendarHead}>
-                <button
-                  type="button"
-                  className={styles.calendarPrev}
-                  onClick={handlePrevMonth}
-                  aria-label="Previous month"
-                >
-                  <ChevronLeft size={16} />
-                </button>
-                <h2 className={styles.calendarMonth}>
-                  {currentMonth.toLocaleDateString('en-US', {
-                    month: 'long',
-                    year: 'numeric',
-                  })}
-                </h2>
-                <button
-                  type="button"
-                  className={styles.calendarNext}
-                  onClick={handleNextMonth}
-                  aria-label="Next month"
-                >
-                  <ChevronRight size={16} />
-                </button>
-              </div>
-
-              <div className={styles.weekdayRow}>
-                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-                  <div key={day} className={styles.weekday}>
-                    {day}
-                  </div>
-                ))}
-              </div>
-
-              <div className={styles.dayGrid}>
-                {Array.from({ length: monthStart }).map((_, index) => (
-                  <div key={`empty-${index}`} className={styles.emptyDay} />
-                ))}
-
-                {Array.from({ length: totalDays }).map((_, index) => {
-                  const day = index + 1;
-                  const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
-                  const dateKey = toDateKey(date);
-                  const isAvailable = availableDateKeys.has(dateKey);
-                  const isSelected = selectedDate ? toDateKey(selectedDate) === dateKey : false;
-                  const isOutsideRange = !isAvailable;
-
-                  return (
+                <div className={styles.calendarCard}>
+                  <div className={styles.calendarHead}>
                     <button
-                      key={dateKey}
                       type="button"
-                      onClick={() => handleDateSelect(day)}
-                      className={`${styles.dayButton} ${
-                        isSelected ? styles.daySelected : ''
-                      } ${isOutsideRange ? styles.dayUnavailable : ''}`}
+                      className={styles.calendarPrev}
+                      onClick={handlePrevMonth}
+                      aria-label="Previous month"
                     >
-                      {day}
+                      <ChevronLeft size={16} />
                     </button>
-                  );
-                })}
-              </div>
+                    <h2 className={styles.calendarMonth}>
+                      {currentMonth.toLocaleDateString('en-US', {
+                        month: 'long',
+                        year: 'numeric',
+                      })}
+                    </h2>
+                    <button
+                      type="button"
+                      className={styles.calendarNext}
+                      onClick={handleNextMonth}
+                      aria-label="Next month"
+                    >
+                      <ChevronRight size={16} />
+                    </button>
+                  </div>
 
-              <div className={styles.quoteCard}>
-                <img
-                  src="/images/luxe/salon-interior.jpg"
-                  alt="Shivya's studio interior"
-                  className={styles.quoteImage}
-                />
-                <p className={styles.quote}>
-                  &ldquo;Art is the only way to run away without leaving home.&rdquo;
-                </p>
-              </div>
-            </div>
-
-            <div className={styles.sideStack}>
-              <div className={styles.timesCard}>
-                <h2 className={styles.timesTitle}>
-                  Available Times — {selectedDate ? formatDisplayDateShort(selectedDate) : 'Select a date'}
-                </h2>
-                <hr className={styles.timesDivider} />
-
-                {([
-                  ['morning', 'Morning', Sunrise],
-                  ['afternoon', 'Afternoon', Sun],
-                  ['evening', 'Evening', MoonStar],
-                ] as const).map(([key, label, Icon]) => {
-                  const slots = groupedTimes[key];
-
-                  if (!slots.length) {
-                    return null;
-                  }
-
-                  return (
-                    <div key={key} className={styles.timeGroup}>
-                      <div className={styles.timeGroupLabel}>
-                        <Icon size={16} />
-                        <span>{label}</span>
+                  <div className={styles.weekdayRow}>
+                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+                      <div key={day} className={styles.weekday}>
+                        {day}
                       </div>
+                    ))}
+                  </div>
 
-                      <div className={styles.timeGrid}>
-                        {slots.map((slot) => {
-                          const isSelected = selectedTime === slot.time && slot.available;
+                  <div className={styles.dayGrid}>
+                    {Array.from({ length: monthStart }).map((_, index) => (
+                      <div key={`empty-${index}`} className={styles.emptyDay} />
+                    ))}
 
-                          return (
-                            <button
-                              key={`${key}-${slot.time}`}
-                              type="button"
-                              disabled={!slot.available || loadingTimes}
-                              className={`${styles.timeButton} ${
-                                isSelected ? styles.timeButtonActive : ''
-                              } ${!slot.available ? styles.timeButtonDisabled : ''}`}
-                              onClick={() => slot.available && setSelectedTime(slot.time)}
-                            >
-                              <span>{formatDisplayTime(slot.time)}</span>
-                              {!slot.available ? <span>Booked</span> : null}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
+                    {Array.from({ length: totalDays }).map((_, index) => {
+                      const day = index + 1;
+                      const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+                      const dateKey = toDateKey(date);
+                      const isAvailable = availableDateKeys.has(dateKey);
+                      const isSelected = selectedDate ? toDateKey(selectedDate) === dateKey : false;
+                      const isOutsideRange = !isAvailable;
 
-                {!loadingTimes && availability.length === 0 && (
-                  <p className={styles.timesEmpty}>
-                    No appointment times are available for this date. Choose another day.
-                  </p>
-                )}
-              </div>
-            </div>
-          </section>
+                      return (
+                        <button
+                          key={dateKey}
+                          type="button"
+                          onClick={() => handleDateSelect(day)}
+                          className={`${styles.dayButton} ${isSelected ? styles.daySelected : ''
+                            } ${isOutsideRange ? styles.dayUnavailable : ''}`}
+                        >
+                          {day}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <div className={styles.quoteCard}>
+                    <img
+                      src="/images/luxe/cozy_home_nail_setup.png"
+                      alt="Shivya's home studio interior"
+                      className={styles.quoteImage}
+                    />
+                    <p className={styles.quote}>
+                      &ldquo;Art is the only way to run away without leaving home.&rdquo;
+                    </p>
+                  </div>
+                </div>
+
+                <div className={styles.sideStack}>
+                  <div className={styles.timesCard}>
+                    <h2 className={styles.timesTitle}>
+                      Available Times — {selectedDate ? formatDisplayDateShort(selectedDate) : 'Select a date'}
+                    </h2>
+                    <hr className={styles.timesDivider} />
+
+                    {([
+                      ['morning', 'Morning', Sunrise],
+                      ['afternoon', 'Afternoon', Sun],
+                      ['evening', 'Evening', MoonStar],
+                    ] as const).map(([key, label, Icon]) => {
+                      const slots = groupedTimes[key];
+
+                      if (!slots.length) {
+                        return null;
+                      }
+
+                      return (
+                        <div key={key} className={styles.timeGroup}>
+                          <div className={styles.timeGroupLabel}>
+                            <Icon size={16} />
+                            <span>{label}</span>
+                          </div>
+
+                          <div className={styles.timeGrid}>
+                            {slots.map((slot) => {
+                              const isSelected = selectedTime === slot.time && slot.available;
+
+                              return (
+                                <button
+                                  key={`${key}-${slot.time}`}
+                                  type="button"
+                                  disabled={!slot.available || loadingTimes}
+                                  className={`${styles.timeButton} ${isSelected ? styles.timeButtonActive : ''
+                                    } ${!slot.available ? styles.timeButtonDisabled : ''}`}
+                                  onClick={() => slot.available && setSelectedTime(slot.time)}
+                                >
+                                  <span>{formatDisplayTime(slot.time)}</span>
+                                  {!slot.available ? <span>Booked</span> : null}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    {!loadingTimes && availability.length === 0 && (
+                      <p className={styles.timesEmpty}>
+                        No appointment times are available for this date. Choose another day.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </section>
 
               <section className={styles.bookActionsFooter} aria-label="Booking actions">
                 <div className={styles.bookActionsInner}>

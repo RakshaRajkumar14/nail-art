@@ -154,7 +154,7 @@ async function generateAIResponse({
   ) {
     return {
       reply:
-        "📍 You can find us at:\n\nShivya's Nal Studio\n124 Atelier Row\nSuite 400\nNew York, NY\n\nWe're easy to find and the studio is prepared for calm, private appointments.",
+        "📍 You can find us at:\n\nShivya's Nail Studio\nAlexanderplatz\n10178 Berlin\n\nWe're easy to find and our cozy home studio is prepared for calm, private appointments.",
       suggestions: ['Get directions', 'Call us', 'Visit website'],
       actions: [
         {
@@ -200,12 +200,12 @@ async function generateAIResponse({
   ) {
     return {
       reply:
-        'I can help with that! To cancel or reschedule your appointment, please:\n\n1. Message us on WhatsApp\n2. Call us at +1 (234) 567-8900\n3. Email us at support@elegancenails.com\n\nPlease note: Cancellations must be made 24 hours in advance.',
+        'I can help with that! To cancel or reschedule your appointment, please:\n\n1. Message us on WhatsApp\n2. Call us at +49 151 12345678\n3. Email us at hello@shivyasnailstudio.com\n\nPlease note: Cancellations must be made 24 hours in advance.',
       suggestions: ['Contact WhatsApp', 'Call us', 'Email us'],
       actions: [
         {
           type: 'link',
-          href: 'https://wa.me/1234567890',
+          href: 'https://wa.me/4915112345678',
           label: 'WhatsApp us',
         },
       ],
@@ -230,7 +230,7 @@ async function generateAIResponse({
   // Default response
   return {
     reply:
-      "Hello! 👋 Welcome to Shivya's Nal Studio! I'm here to help. You can ask me about:\n\n• 📅 Booking an appointment\n• 💳 Pricing and services\n• 🕐 Our hours\n• 📍 Our location\n• 🎨 Our nail designs\n\nWhat can I help you with?",
+      "Hello! 👋 Welcome to Shivya's Nail Studio! I'm here to help. You can ask me about:\n\n• 📅 Booking an appointment\n• 💳 Pricing and services\n• 🕐 Our hours\n• 📍 Our location\n• 🎨 Our nail designs\n\nWhat can I help you with?",
     suggestions: [
       'Book appointment',
       'View services',
